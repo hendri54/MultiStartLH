@@ -3,8 +3,18 @@ uuid = "a5e8eef2-c7ea-489d-a6c6-78155c81204a"
 authors = ["hendri54 <hendricksl@protonmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+
 [compat]
-julia = "1"
+julia = "1.5"
+DocStringExtensions = "0.8"
+FileIO = "1"
+JLD2 = "0.4"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

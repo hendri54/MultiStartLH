@@ -1,5 +1,14 @@
 module MultiStartLH
 
-# Write your package code here.
+using Dates, DocStringExtensions, FileIO, JLD2, Random
 
-end
+export test_dir;
+
+include("history.jl");
+include("update_rule.jl");
+include("multistart.jl");
+
+test_dir() = normpath(joinpath(@__DIR__, "..", "testfiles"));
+
+
+end # module
