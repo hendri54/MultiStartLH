@@ -49,7 +49,7 @@ Run the multistart optimization.
 function optimize(m :: MultiStart{F, U}, 
         io = stdout) where {F, U}
 
-    println(io, start_header(m));
+    log_msg(1, io, start_header(m));
     startTime = Dates.now();
     h = init_history(m.historyFn, m.guessesV);
 
@@ -58,15 +58,15 @@ function optimize(m :: MultiStart{F, U},
     while !done
         j += 1;
         newGuessV = new_guess(m.updateRule, h, j);
-        println(io, point_start_header(j));
+        log_msg(2, io, point_start_header(j));
         solnV, fVal, exitFlag = m.optFct(newGuessV);
-        println(io, finish_point_header(j, fVal, exitFlag));
+        log_msg(2, io, finish_point_header(j, fVal, exitFlag));
         add_to_history!(h, j, newGuessV, solnV, fVal, exitFlag);
         save_history(h);
         continue_run(m, h, j, startTime; io)  ||  (done = true);
     end
     solnV, fVal, exitFlag = best_point(h);
-    println(io, finish_header(fVal, exitFlag, startTime, n_points(m)));
+    log_msg(1, io, finish_header(fVal, exitFlag, startTime, n_points(m)));
     return solnV, fVal, exitFlag
 end
 
@@ -81,18 +81,18 @@ function continue_run(m :: MultiStart{F,U}, h :: History,
             j, startTime; io = stdout) where {F,U}
     cont = true;
     if reached_max_time(startTime, m.maxHours)
-        println(io, "Max time reached.");
+        log_msg(3, io, "Max time reached.");
         cont = false;
     end
     if j >= n_points(m)
-        println(io, "All points evaluated.");
+        log_msg(3, io, "All points evaluated.");
         cont = false;
     end
     if (j > 1)
         fDiff = abs(h.fValV[j-1] - h.fValV[j]);
         if fDiff < m.fTol
             fDiffStr = round(fDiff; digits = 2);
-            println(io, "Difference in fVal below fTol: $fDiffStr < $(m.fTol)");
+            log_msg(3, io, "Difference in fVal below fTol: $fDiffStr < $(m.fTol)");
             cont = false;
         end
     end
