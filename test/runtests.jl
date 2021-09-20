@@ -1,5 +1,5 @@
 using MultiStartLH
-using Test
+using Dates, Test
 
 mdl = MultiStartLH;
 

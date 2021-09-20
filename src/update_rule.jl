@@ -45,8 +45,8 @@ function new_guess(ur :: TikTakRule, h :: History, j :: Int)
         guessV = first(h.guessesV);
     else
         wt = weight_parameter(ur, j);
-        bestV, _ = best_point(h);
-        guessV = wt .* bestV .+ (1 - wt) .* h.guessesV[j];
+        pBest = best_point(h);
+        guessV = wt .* pBest.solnV .+ (1 - wt) .* h.guessesV[j];
     end
     clamp!(guessV, ur.lb, ur.ub);
     return guessV

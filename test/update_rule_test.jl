@@ -1,3 +1,5 @@
+using Dates
+
 function tiktak_test()
     @testset "TikTakRule" begin
         nPoints = 17;
@@ -10,7 +12,9 @@ function tiktak_test()
             startV = mdl.new_guess(ttr, h, j);
             # println(startV);
             @test size(startV) == size(solnV);
-            mdl.add_to_history!(h, j, startV, solnV .+ (1/j), fVal - (1/j), :success);
+            p = Point(startV, solnV .+ (1/j), fVal + 1/j, fVal - 1/j,
+                :success, Second(120 + j), 10 * j);
+            mdl.add_to_history!(h, j, p);
         end
     end
 end
