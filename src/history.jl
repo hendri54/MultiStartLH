@@ -1,5 +1,6 @@
 export Point
-export History, best_point, n_solved, n_params, load_history, save_history
+export History, best_point, n_solved, n_params, load_history, save_history;
+export f_values;
 
 mutable struct Point{F}
     guessV :: Vector{F}
@@ -19,6 +20,7 @@ empty_point(F) =
 n_params(p :: Point{F}) where F = length(p.guessV);
 solved(p :: Point{F}) where F = (p.exitFlag != :notRun);
 f_value(p :: Point{F}) where F = p.fVal;
+fstart_value(p :: Point{F}) where F = p.fStart;
 
 """
 	$(SIGNATURES)
@@ -31,19 +33,17 @@ mutable struct History{F}
     # Initial population
     guessesV :: Vector{Vector{Float64}}
     pointV :: Vector{Point{F}}
-    # # Starting guesses
-    # startV :: Vector{Vector{Float64}}
-    # # Solutions
-    # solnV :: Vector{Vector{Float64}}
-    # fValStartV :: Vector{Float64}
-    # fValV :: Vector{Float64}
-    # exitFlagV :: Vector{Symbol}
-    # runTimeV :: Vector{Second}
 end
 
+Base.show(io :: IO, h :: History{F}) where F = 
+    print(io, "MultiStartLH history with $(n_solved(h)) points.");
+
+get_points(h :: History{F}) where F = get_points(h, 1 : n_solved(h));
+get_points(h :: History{F}, j) where F = h.pointV[j];
 n_params(h :: History{F}) where F = length(first(h.guessesV));
 n_solved(h :: History{F}) where F = sum(solved.(h.pointV));
-f_values(h :: History{F}) where F = f_value.(h.pointV[ 1 : n_solved(h)]);
+f_values(h :: History{F}) where F = f_value.(get_points(h));
+fstart_values(h :: History{F}) where F = fstart_value.(get_points(h));
 
 function init_history(fPath :: String, 
             guessesV :: AbstractVector{Vector{F1}}) where F1
@@ -65,12 +65,6 @@ function add_to_history!(h :: History, j :: Integer, p :: Point{F}) where F
     # h.nPoints += 1;
     @assert !solved(h.pointV[j]);
     h.pointV[j] = p;
-    # h.startV[j] = startV;
-    # h.solnV[j] = solnV;
-    # h.fValStartV[j] = fValStart;
-    # h.fValV[j] = fVal;
-    # h.exitFlagV[j] = exitFlag;
-    # h.runTimeV[j] = round(runTime, Second);
 end
 
 """
